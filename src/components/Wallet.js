@@ -1,6 +1,9 @@
 import React from "react";
 import { Dropdown, Stack, Spinner } from "react-bootstrap";
 
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 const Wallet = ({ address, amount, symbol, destroy }) => {
   if (address) {
     return (
