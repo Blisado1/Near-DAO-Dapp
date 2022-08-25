@@ -1,4 +1,7 @@
 {
+  "name": "dao-dapp",
+  "version": "0.1.0",
+  "private": true,
   "devDependencies": {
     "near-sdk-as": "^3.2.3"
   }
