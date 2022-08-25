@@ -1,6 +1,8 @@
 import { Button } from "@mui/material"
 import React from "react"
 import { Input } from "./Form"
+import { Tooltip } from "@mui/material"
+import { Info } from "@mui/icons-material"
 
 export const Proposal = () => {
   const [amount, setAmount] = React.useState("")
@@ -8,7 +10,12 @@ export const Proposal = () => {
   const [sendTo, setSendTo] = React.useState("")
   return (
     <div id="create-proposal" className="option">
-      <p className="title">Create Proposal. _04</p>
+      <p className="title">
+        Create Proposal. _04
+        <Tooltip title="Kickstart your new proposal" arrow>
+          <Info color="primary" sx={{cursor: "pointer"}}/>
+        </Tooltip>
+      </p>
       <Input
         name={"Name"}
         type="text"

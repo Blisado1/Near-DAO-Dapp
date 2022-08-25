@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap";
+import { Button } from "@mui/material";
 
 const Cover = ({ name, login, coverImg }) => {
   if ((name, login, coverImg)) {
@@ -20,13 +20,13 @@ const Cover = ({ name, login, coverImg }) => {
           <p>Please connect your wallet to continue.</p>
           <Button
             onClick={login}
-            variant="outline-light"
+            variant="contained"
             className="rounded-pill px-3 mt-3"
           >
             Connect Wallet
           </Button>
         </div>
-        <p className="mt-auto text-secondary">Powered by NEAR</p>
+        <p style={{ fontSize: "0.8rem" }}>Powered by NEAR</p>
       </div>
     );
   }
