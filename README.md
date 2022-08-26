@@ -1,5 +1,5 @@
 # DAO-DAPP
-The app is hosted here: [https://dacadeorg.github.io/near-marketplace-dapp/](https://dacadeorg.github.io/near-marketplace-dapp/)
+The app is hosted here: [https://blisado1.github.io/Near-DAO-Dapp/](https://blisado1.github.io/Near-DAO-Dapp/)
 
 # Disclaimer
 This is a test dapp and should not be used in production.
@@ -13,9 +13,7 @@ This DAO contract:
 - Execute successful investment proposals (i.e send money)
 - The number of votes an investor has is equivalent to the number of shares the investor has.
 
-On deployment the contract has been set to 50 people, 365 days of contributions, 24 hours for voting.
-
-[DAPP LINK](https://blisado1.github.io/Dao-Dapp/)
+On deployment the contract has been set to 70 % approval, 365 days of contributions, 24 hours for voting.
 
 
 

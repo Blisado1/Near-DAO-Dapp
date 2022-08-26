@@ -13,21 +13,23 @@ const Cover = ({ name, login, coverImg }) => {
         <div>
           <img src={coverImg} alt="dao" />
         </div>
-        <div>
-          <h1 style={{ margin: "1rem" }}>{name}</h1>
-          <p style={{ margin: "0.5rem" }}>
-            Please connect your wallet to continue.
-          </p>
-          <Button
-            onClick={login}
-            variant="outlined"
-            color="primary"
-            startIcon={<AccountBalanceWallet />}
-          >
-            Connect Wallet
-          </Button>
+        <div className="loginBox">
+          <div>
+            <h1 style={{ margin: "1rem" }}>{name}</h1>
+            <p style={{ margin: "0.5rem" }}>
+              Please connect your wallet to continue.
+            </p>
+            <Button
+              onClick={login}
+              variant="outlined"
+              color="primary"
+              startIcon={<AccountBalanceWallet />}
+            >
+              Connect Wallet
+            </Button>
+          </div>
+          <p>Powered by NEAR</p>
         </div>
-        <p>Powered by NEAR</p>
       </div>
     );
   }
