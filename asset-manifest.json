@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/Near-DAO-Dapp/static/css/main.a485cdc6.chunk.css",
+    "main.js": "/Near-DAO-Dapp/static/js/main.2a0ec4dd.chunk.js",
+    "main.js.map": "/Near-DAO-Dapp/static/js/main.2a0ec4dd.chunk.js.map",
+    "runtime-main.js": "/Near-DAO-Dapp/static/js/runtime-main.85b632bf.js",
+    "runtime-main.js.map": "/Near-DAO-Dapp/static/js/runtime-main.85b632bf.js.map",
+    "static/css/2.b28305bc.chunk.css": "/Near-DAO-Dapp/static/css/2.b28305bc.chunk.css",
+    "static/js/2.9f849a7d.chunk.js": "/Near-DAO-Dapp/static/js/2.9f849a7d.chunk.js",
+    "static/js/2.9f849a7d.chunk.js.map": "/Near-DAO-Dapp/static/js/2.9f849a7d.chunk.js.map",
+    "static/js/3.e178128b.chunk.js": "/Near-DAO-Dapp/static/js/3.e178128b.chunk.js",
+    "static/js/3.e178128b.chunk.js.map": "/Near-DAO-Dapp/static/js/3.e178128b.chunk.js.map",
+    "index.html": "/Near-DAO-Dapp/index.html",
+    "static/css/2.b28305bc.chunk.css.map": "/Near-DAO-Dapp/static/css/2.b28305bc.chunk.css.map",
+    "static/css/main.a485cdc6.chunk.css.map": "/Near-DAO-Dapp/static/css/main.a485cdc6.chunk.css.map",
+    "static/js/2.9f849a7d.chunk.js.LICENSE.txt": "/Near-DAO-Dapp/static/js/2.9f849a7d.chunk.js.LICENSE.txt",
+    "static/media/DAO.d4104a3f.jpg": "/Near-DAO-Dapp/static/media/DAO.d4104a3f.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.85b632bf.js",
+    "static/css/2.b28305bc.chunk.css",
+    "static/js/2.9f849a7d.chunk.js",
+    "static/css/main.a485cdc6.chunk.css",
+    "static/js/main.2a0ec4dd.chunk.js"
+  ]
+}
