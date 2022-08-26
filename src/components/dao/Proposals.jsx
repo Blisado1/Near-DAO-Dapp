@@ -16,6 +16,7 @@ import {
   getContractParams,
   executeProposal,
 } from "../../utils/dao";
+import { utils } from "near-api-js";
 
 export default function Proposals() {
   const [proposals, setProposals] = useState([]);
@@ -30,8 +31,9 @@ export default function Proposals() {
 
   const retrieveData = useCallback(async () => {
     const contract = await getContractParams();
+    console.log(contract);
     setAdmin(contract.admin);
-  }, [account.accountId]);
+  }, []);
 
   function isFinished(proposal) {
     const now = new Date().getTime();
@@ -39,11 +41,35 @@ export default function Proposals() {
     return proposalEnd > now > 0 ? false : true;
   }
 
-  async function hasVoted(accountId, proposal) {
-    return await checkIfInvestorHasVoted({
+  function hasVoted(accountId, proposal) {
+    let hasVoted;
+
+    checkIfInvestorHasVoted({
       accountId,
       proposalId: proposal.id,
+    }).then((result) => {
+      hasVoted = result;
     });
+
+    return hasVoted;
+  }
+
+  function convertTime(proposal) {
+    let dateObj = new Date(parseInt(proposal.ends) / 1000000);
+
+    console.log(proposal.ends);
+    let date = dateObj.toLocaleDateString("en-us", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    let time = dateObj.toLocaleString("en-us", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    return date + ", " + time;
   }
 
   const startVoteTxn = async (proposal) => {
@@ -124,7 +150,7 @@ export default function Proposals() {
 
           {/* ****************Table Body*************** */}
           <TableBody>
-            {proposals.map((proposal) => (
+            {proposals.reverse().map((proposal) => (
               <TableRow
                 key={proposal.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -134,7 +160,7 @@ export default function Proposals() {
                 </TableCell>
                 <TableCell sx={{ color: "#aec1c5" }}>{proposal.name}</TableCell>
                 <TableCell sx={{ color: "#aec1c5" }}>
-                  {proposal.amount}
+                  {utils.format.formatNearAmount(proposal.amount)} NEAR
                 </TableCell>
                 <TableCell sx={{ color: "#aec1c5" }}>
                   {proposal.recipient}
@@ -158,7 +184,9 @@ export default function Proposals() {
                     </LoadingButton>
                   )}
                 </TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>{proposal.ends}</TableCell>
+                <TableCell sx={{ color: "#aec1c5" }}>
+                  {convertTime(proposal)}
+                </TableCell>
                 <TableCell sx={{ color: "#aec1c5" }}>
                   {proposal.executed ? (
                     "Yes"

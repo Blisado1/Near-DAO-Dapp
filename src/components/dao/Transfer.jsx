@@ -14,9 +14,11 @@ export const Transfer = () => {
     if (amount === "" && sendTo === "") return;
     try {
       setLoading(true);
-      await transferShares({ amount, sendTo }).then((resp) => {
-        console.log(resp);
-      });
+      await transferShares({ amountToTransfer: amount, to: sendTo }).then(
+        (resp) => {
+          console.log(resp);
+        }
+      );
     } catch (error) {
       console.log({ error });
     } finally {

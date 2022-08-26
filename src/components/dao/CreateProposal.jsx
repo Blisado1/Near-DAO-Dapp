@@ -8,14 +8,14 @@ import { createProposal } from "../../utils/dao";
 export const Proposal = () => {
   const [amount, setAmount] = React.useState("");
   const [name, setName] = React.useState("");
-  const [sendTo, setSendTo] = React.useState("");
+  const [recipient, setRecipient] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   const startTxn = async () => {
-    if (amount === "" && name === "" && sendTo === "") return;
+    if (amount === "" && name === "" && recipient === "") return;
     try {
       setLoading(true);
-      await createProposal({ amount, name, sendTo }).then((resp) => {
+      await createProposal({ amount, name, recipient }).then((resp) => {
         console.log(resp);
       });
     } catch (error) {
@@ -48,8 +48,8 @@ export const Proposal = () => {
       <Input
         name={"Recipient"}
         type="text"
-        value={sendTo}
-        onChange={(e) => setSendTo(e.target.value)}
+        value={recipient}
+        onChange={(e) => setRecipient(e.target.value)}
       />
       <LoadingButton
         onClick={() => startTxn()}

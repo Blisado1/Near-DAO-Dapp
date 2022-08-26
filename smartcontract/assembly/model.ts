@@ -21,7 +21,7 @@ export class contractParameters {
     public setContractParams(admin: string, daoLife: u64, voteTimeLimit: u64, quorum: u32): void {
         this.admin = context.predecessor;
         this.daoLife = context.blockTimestamp + (daoLife * day);
-        this.voteTime = context.blockTimestamp + (voteTimeLimit * hour);
+        this.voteTime = voteTimeLimit * hour;
         this.quorum = quorum;
     }
 
@@ -45,7 +45,8 @@ export class contractParameters {
         this.admin = newAdmin;
     }
 }
-export const initialValue: u128 = u128.from("000000000000000000000000");
+
+const initialValue: u128 = u128.from("000000000000000000000000");
 const contractInstance = new contractParameters();
 
 export function updateContractParams(contract: contractParameters): void {
@@ -73,14 +74,14 @@ export class Proposal {
     executed: bool;
     private voters: Array<String>;
 
-    public static fromPayload(payload: Proposal): Proposal {
+    public static fromPayload(payload: Proposal, voteTimeLimit: u64): Proposal {
         const proposal = new Proposal();
         proposal.id = payload.id;
         proposal.name = payload.name;
         proposal.amount = payload.amount;
         proposal.recipient = payload.recipient;
         proposal.votes = initialValue;
-        proposal.ends = context.blockTimestamp;
+        proposal.ends = context.blockTimestamp + voteTimeLimit;
         proposal.executed = false;
         proposal.voters = new Array<String>();
         return proposal;

@@ -19,9 +19,11 @@ export function transferShares({ amountToTransfer, to }) {
 }
 
 export function createProposal(proposal) {
+  console.log(proposal);
   proposal.id = uuid4();
   proposal.amount = parseNearAmount(proposal.amount + "");
-  return window.contract.createProposal({ proposal });
+
+  // return window.contract.createProposal({ proposal });
 }
 
 export function voteProposal(proposalId) {
@@ -41,7 +43,13 @@ export function getInvestorData(accountId) {
 }
 
 export function checkIfInvestorHasVoted({ accountId, proposalId }) {
-  return window.contract.hasVoted({ accountId, proposalId });
+  let hasVoted = new Promise(async (resolve, reject) => {
+    const _hasVoted = await window.contract.hasVoted({ accountId, proposalId });
+
+    resolve(_hasVoted);
+  });
+
+  return hasVoted;
 }
 
 export function getContractParams() {

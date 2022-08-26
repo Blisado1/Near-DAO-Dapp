@@ -159,7 +159,7 @@ export function createProposal(proposal: Proposal): void {
 
     assert(u128.gt(contractParameters.availableFunds, proposal.amount) || u128.eq(contractParameters.availableFunds, proposal.amount), "amount too big");
 
-    Proposals.set(proposal.id, Proposal.fromPayload(proposal));
+    Proposals.set(proposal.id, Proposal.fromPayload(proposal, contractParameters.voteTime));
 }
 
 /**
