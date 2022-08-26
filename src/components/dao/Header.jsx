@@ -3,9 +3,12 @@ import { logout as destroy, accountBalance } from "../../utils/near";
 import { Typography, Box, Grid, Button } from "@mui/material";
 import { Drawer } from "@mui/material";
 import { Logout } from "@mui/icons-material";
+import { getInvestorData } from "../../utils/dao";
+import { utils } from "near-api-js";
 
 export const Header = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [userData, setUserData] = useState({});
 
   const account = window.walletConnection.account();
 
@@ -17,9 +20,16 @@ export const Header = () => {
     }
   }, [account.accountId]);
 
+  const retrieveUserData = useCallback(async () => {
+    if (account.accountId) {
+      setUserData(await getInvestorData(account.accountId));
+    }
+  }, [account.accountId]);
+
   useEffect(() => {
     getBalance();
-  }, [getBalance]);
+    retrieveUserData();
+  }, [getBalance, retrieveUserData]);
 
   return (
     <>
@@ -74,7 +84,10 @@ export const Header = () => {
                 {balance} NEAR
               </Typography>
               <Typography color={"#aec1c5"} fontSize="1rem">
-                <span style={{ color: "#fcbd7a" }}>#</span> Shares: {0}
+                <span style={{ color: "#fcbd7a" }}>#</span> Shares:{" "}
+                {userData.shares
+                  ? utils.format.formatNearAmount(userData.shares)
+                  : 0}
               </Typography>
             </Box>
           </Box>

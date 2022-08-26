@@ -7,6 +7,17 @@
   height: 80vh!important;
 }
 
+.cover-page{
+ width: 100%;
+ height: 100vh;
+ text-align: center; 
+}
+
+.cover-page img{
+  width: 70%;
+  height: 70vh;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&display=swap');
 
 
@@ -147,6 +158,8 @@ a {
   font-size: 6rem;
   margin-bottom: 1rem;
 }
+
+
 
 @media (max-width: 700px) {
   .hero_dao{

@@ -1,32 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
+import { AccountBalanceWallet } from "@mui/icons-material";
 
 const Cover = ({ name, login, coverImg }) => {
   if ((name, login, coverImg)) {
     return (
       <div
-        className="d-flex justify-content-center flex-column text-center "
+        className="cover-page"
         style={{ background: "#000", minHeight: "100vh" }}
       >
-        <div className="mt-auto text-light mb-5">
-          <div
-            className=" ratio ratio-1x1 mx-auto mb-2"
-            style={{ maxWidth: "320px" }}
-          >
-            <img src={coverImg} alt="" />
-          </div>
-          <h1>{name}</h1>
-          <p>Please connect your wallet to continue.</p>
+        <div>
+          <img src={coverImg} alt="dao" />
+        </div>
+        <div>
+          <h1 style={{ margin: "1rem" }}>{name}</h1>
+          <p style={{ margin: "0.5rem" }}>
+            Please connect your wallet to continue.
+          </p>
           <Button
             onClick={login}
-            variant="contained"
-            className="rounded-pill px-3 mt-3"
+            variant="outlined"
+            color="primary"
+            startIcon={<AccountBalanceWallet />}
           >
             Connect Wallet
           </Button>
         </div>
-        <p style={{ fontSize: "0.8rem" }}>Powered by NEAR</p>
+        <p>Powered by NEAR</p>
       </div>
     );
   }
