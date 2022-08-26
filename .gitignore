@@ -1,6 +1,7 @@
 build
 node_modules
 *.log
+passkey
 
 smartcontract/build
 smartcontract/node_modules

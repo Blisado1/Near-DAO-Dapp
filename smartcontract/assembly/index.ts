@@ -1,26 +1,34 @@
-import { checkIfInvestor, getContractParams, Investor, Investors, MinDeposit, Proposal, Proposals, updateContractParams } from "./model";
+import { checkIfInvestor, contractParameters, getContractParams, Investor, Investors, MinDeposit, Proposal, Proposals, updateContractParams } from "./model";
 import { context, ContractPromiseBatch, u128 } from "near-sdk-as";
 
 /**
  * 
  * This function changes the state of data in the blockchain. 
  * It is used to start the DAO
- * 
- * @param daoLife - How long the DAO is going to run;
- * @param voteTimeLimit - How long the investors have to vote
- * @param quorum - Min number of people needed for a proposal to be executed on the DAO
+ * @param admin - moderator of DAO
+ * @param daoLife - How long the DAO is going to run in days;
+ * @param voteTimeLimit - How long the investors have to vote in hours
+ * @param quorum - Min percentage of votes required for a proposal to be executed on the DAO
  */
-export function startDAO(daoLife: u64, voteTimeLimit: u64, quorum: u32): void {
+export function startDAO(admin: string, daoLife: u64, voteTimeLimit: u64, quorum: u32): void {
     assert(context.predecessor == context.contractName, "Method is private");
 
     // get Contract parameters from storage
     const contractParameters = getContractParams();
 
+    // check if dao is already live
+    assert(context.blockTimestamp > contractParameters.daoLife, "dao is already Live")
+
     // set the parameters
-    contractParameters.setContractParams(daoLife, voteTimeLimit, quorum);
+    contractParameters.setContractParams(admin, daoLife, voteTimeLimit, quorum);
 
     // update the contract parameters in storage
     updateContractParams(contractParameters);
+}
+
+// to view active contract parameters
+export function contractParam(): contractParameters {
+    return getContractParams();
 }
 
 /**
@@ -79,9 +87,6 @@ export function redeemShares(amountToRedeem: u128): void {
     // check if investor still has shares else revoke investor rights
     if (!investor.stillHasShares()) {
         investor.revokeRights();
-        Investors.set(context.predecessor, null)
-    } else {
-        Investors.set(context.predecessor, investor);
     }
 
     //send money
@@ -94,6 +99,7 @@ export function redeemShares(amountToRedeem: u128): void {
 
     // update values in storage
     updateContractParams(contractParameters);
+    Investors.set(context.predecessor, investor);
 }
 
 
@@ -117,9 +123,6 @@ export function transferShares(amountToTransfer: u128, to: string): void {
     // check if investor still has shares else revoke investor rights
     if (!investor.stillHasShares()) {
         investor.revokeRights();
-        Investors.set(context.predecessor, null)
-    } else {
-        Investors.set(context.predecessor, investor);
     }
 
     // investor To
@@ -135,6 +138,7 @@ export function transferShares(amountToTransfer: u128, to: string): void {
 
     // update values in storage
     Investors.set(context.predecessor, investorTo);
+    Investors.set(context.predecessor, investor);
 }
 
 

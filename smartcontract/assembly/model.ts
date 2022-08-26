@@ -1,5 +1,9 @@
 import { PersistentUnorderedMap, context, PersistentMap, storage, u128 } from "near-sdk-as";
 
+const hour: u64 = (60 * 60 * 1000 * 1000000);
+
+const day: u64 = 24 * hour;
+
 /**
  * This class represents the contract parameters.
  * It contains basic properties that are needed to define the contract.
@@ -14,10 +18,10 @@ export class contractParameters {
     availableFunds: u128 = initialValue;
     daoLife: u64 = 0;
 
-    public setContractParams(daoLife: u64, voteTimeLimit: u64, quorum: u32): void {
+    public setContractParams(admin: string, daoLife: u64, voteTimeLimit: u64, quorum: u32): void {
         this.admin = context.predecessor;
-        this.daoLife = daoLife;
-        this.voteTime = voteTimeLimit;
+        this.daoLife = context.blockTimestamp + (daoLife * day);
+        this.voteTime = context.blockTimestamp + (voteTimeLimit * hour);
         this.quorum = quorum;
     }
 
@@ -135,7 +139,7 @@ export class Investor {
     }
 }
 
-export const Investors = new PersistentUnorderedMap<string, Investor | null>("INVESTORS");
+export const Investors = new PersistentUnorderedMap<string, Investor>("INVESTORS");
 
 export function checkIfInvestor(accountId: string): bool {
     // get investor data
