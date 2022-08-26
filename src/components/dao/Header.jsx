@@ -22,7 +22,10 @@ export const Header = () => {
 
   const retrieveUserData = useCallback(async () => {
     if (account.accountId) {
-      setUserData(await getInvestorData(account.accountId));
+      const data = await getInvestorData(account.accountId);
+      if (data !== null) {
+        setUserData(data);
+      }
     }
   }, [account.accountId]);
 

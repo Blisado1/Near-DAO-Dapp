@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import {
   getProposals,
-  checkIfInvestorHasVoted,
   voteProposal,
   getContractParams,
   executeProposal,
@@ -31,7 +30,6 @@ export default function Proposals() {
 
   const retrieveData = useCallback(async () => {
     const contract = await getContractParams();
-    console.log(contract);
     setAdmin(contract.admin);
   }, []);
 
@@ -42,22 +40,20 @@ export default function Proposals() {
   }
 
   function hasVoted(accountId, proposal) {
-    let hasVoted;
+    return proposal.voters.includes(accountId);
+  }
 
-    checkIfInvestorHasVoted({
-      accountId,
-      proposalId: proposal.id,
-    }).then((result) => {
-      hasVoted = result;
-    });
-
-    return hasVoted;
+  function formatID(proposal) {
+    return (
+      proposal.id.slice(0, 5) +
+      "..." +
+      proposal.id.slice(proposal.id.length - 4, proposal.id.length)
+    );
   }
 
   function convertTime(proposal) {
     let dateObj = new Date(parseInt(proposal.ends) / 1000000);
 
-    console.log(proposal.ends);
     let date = dateObj.toLocaleDateString("en-us", {
       weekday: "short",
       year: "numeric",
@@ -118,29 +114,50 @@ export default function Proposals() {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="proposals">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ color: "#aec1c5", fontSize: "1rem" }}>
+              <TableCell
+                align="center"
+                sx={{ color: "#aec1c5", fontSize: "1rem" }}
+              >
                 ID
               </TableCell>
-              <TableCell sx={{ color: "#aec1c5", fontSize: "1rem" }}>
+              <TableCell
+                align="center"
+                sx={{ color: "#aec1c5", fontSize: "1rem" }}
+              >
                 Name
               </TableCell>
-              <TableCell sx={{ color: "#aec1c5", fontSize: "1rem" }}>
+              <TableCell
+                align="center"
+                sx={{ color: "#aec1c5", fontSize: "1rem" }}
+              >
                 Amount
               </TableCell>
-              <TableCell sx={{ color: "#aec1c5", fontSize: "1rem" }}>
+              <TableCell
+                align="center"
+                sx={{ color: "#aec1c5", fontSize: "1rem" }}
+              >
                 Recipient
               </TableCell>
-              <TableCell sx={{ color: "#aec1c5", fontSize: "1rem" }}>
+              <TableCell
+                align="center"
+                sx={{ color: "#aec1c5", fontSize: "1rem" }}
+              >
                 Votes
               </TableCell>
-              <TableCell sx={{ color: "#aec1c5", fontSize: "1rem" }}>
+              <TableCell
+                align="center"
+                sx={{ color: "#aec1c5", fontSize: "1rem" }}
+              >
                 Vote
               </TableCell>
-              <TableCell sx={{ color: "#aec1c5", fontSize: "1rem" }}>
+              <TableCell
+                align="center"
+                sx={{ color: "#aec1c5", fontSize: "1rem" }}
+              >
                 Ends on
               </TableCell>
               <TableCell
-                align="right"
+                align="center"
                 sx={{ color: "#aec1c5", fontSize: "1rem" }}
               >
                 Executed
@@ -155,20 +172,33 @@ export default function Proposals() {
                 key={proposal.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row" sx={{ color: "#aec1c5" }}>
-                  {proposal.id}
+                <TableCell
+                  align="center"
+                  component="th"
+                  scope="row"
+                  sx={{ color: "#aec1c5" }}
+                >
+                  {formatID(proposal)}
                 </TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>{proposal.name}</TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>
+                <TableCell align="center" sx={{ color: "#aec1c5" }}>
+                  {proposal.name}
+                </TableCell>
+                <TableCell align="center" sx={{ color: "#aec1c5" }}>
                   {utils.format.formatNearAmount(proposal.amount)} NEAR
                 </TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>
-                  {proposal.recipient}
+                <TableCell align="center" sx={{ color: "#aec1c5" }}>
+                  <a
+                    href={`https://explorer.testnet.near.org/accounts/${proposal.recipient}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {proposal.recipient}
+                  </a>
                 </TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>
-                  {proposal.votes}
+                <TableCell align="center" sx={{ color: "#aec1c5" }}>
+                  {utils.format.formatNearAmount(proposal.votes)}
                 </TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>
+                <TableCell align="center" sx={{ color: "#aec1c5" }}>
                   {" "}
                   {isFinished(proposal) ? (
                     "Vote finished"
@@ -184,10 +214,10 @@ export default function Proposals() {
                     </LoadingButton>
                   )}
                 </TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>
+                <TableCell align="center" sx={{ color: "#aec1c5" }}>
                   {convertTime(proposal)}
                 </TableCell>
-                <TableCell sx={{ color: "#aec1c5" }}>
+                <TableCell sx={{ color: "#aec1c5" }} align="center">
                   {proposal.executed ? (
                     "Yes"
                   ) : admin === account.accountId ? (

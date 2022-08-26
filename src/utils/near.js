@@ -30,7 +30,7 @@ export async function initializeContract() {
         "redeemShares",
         "transferShares",
         "createProposal",
-        "voteProposal",
+        "vote",
         "executeProposal",
       ],
     }

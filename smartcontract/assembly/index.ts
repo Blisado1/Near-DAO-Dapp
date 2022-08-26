@@ -134,7 +134,7 @@ export function transferShares(amountToTransfer: u128, to: string): void {
         investorTo = new Investor(to);
     }
 
-    investorTo.updateShares(context.attachedDeposit, "add");
+    investorTo.updateShares(amountToTransfer, "add");
 
     // update values in storage
     Investors.set(context.predecessor, investorTo);

@@ -19,11 +19,9 @@ export function transferShares({ amountToTransfer, to }) {
 }
 
 export function createProposal(proposal) {
-  console.log(proposal);
   proposal.id = uuid4();
   proposal.amount = parseNearAmount(proposal.amount + "");
-
-  // return window.contract.createProposal({ proposal });
+  return window.contract.createProposal({ proposal });
 }
 
 export function voteProposal(proposalId) {
