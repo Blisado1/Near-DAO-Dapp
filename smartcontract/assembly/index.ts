@@ -152,7 +152,7 @@ export function transferShares(amountToTransfer: u128, to: string): void {
 		checkIfInvestor(context.predecessor),
 		"Only Investors are allowed to use this feature"
 	);
-
+	assert(to.length > 8, "Invalid accountId for to");
 	const investor = getInvestor(context.predecessor);
 
 	assert(
