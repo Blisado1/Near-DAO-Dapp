@@ -1,11 +1,13 @@
 import { PersistentUnorderedMap, context, PersistentMap, storage, u128 } from "near-sdk-as";
 
+// one hour in nanoseconds
 const hour: u64 = (60 * 60 * 1000 * 1000000);
 
+// day in nanoseconds
 const day: u64 = 24 * hour;
 
 /**
- * This class represents the contract parameters.
+ * @dev This class represents the contract parameters.
  * It contains basic properties that are needed to define the contract.
  * {@link nearBindgen} - it's a decorator that makes this class serializable so it can be persisted on the blockchain level. 
  */
@@ -16,10 +18,11 @@ export class contractParameters {
     totalShares: u128 = initialValue;
     voteTime: u64 = 0;
     availableFunds: u128 = initialValue;
+    locked: u128 = initialValue;
     daoLife: u64 = 0;
 
     public setContractParams(admin: string, daoLife: u64, voteTimeLimit: u64, quorum: u32): void {
-        this.admin = context.predecessor;
+        this.admin = admin;
         this.daoLife = context.blockTimestamp + (daoLife * day);
         this.voteTime = voteTimeLimit * hour;
         this.quorum = quorum;
@@ -44,6 +47,15 @@ export class contractParameters {
     public updateAdmin(newAdmin: string): void {
         this.admin = newAdmin;
     }
+
+    public updateLocked(amount: u128, command: string) : void {
+        if (command == "add") {
+            this.locked = u128.add(this.locked, amount);
+        } else if (command == "sub") {
+            this.locked = u128.sub(this.locked, amount);
+        }
+        
+    }
 }
 
 const initialValue: u128 = u128.from("000000000000000000000000");
@@ -59,7 +71,7 @@ export function getContractParams(): contractParameters {
 }
 
 /**
- * This class represents a proposal.
+ * @dev This class represents a proposal.
  * It contains basic properties that are needed to define a proposal.
  * {@link nearBindgen} - it's a decorator that makes this class serializable so it can be persisted on the blockchain level. 
  */
@@ -72,6 +84,8 @@ export class Proposal {
     votes: u128;
     ends: u64;
     executed: bool;
+    success: bool;
+    ended: bool;
     private voters: Array<String>;
 
     public static fromPayload(payload: Proposal, voteTimeLimit: u64): Proposal {
@@ -83,6 +97,8 @@ export class Proposal {
         proposal.votes = initialValue;
         proposal.ends = context.blockTimestamp + voteTimeLimit;
         proposal.executed = false;
+        proposal.success = false;
+        proposal.ended = false;
         proposal.voters = new Array<String>();
         return proposal;
     }
@@ -96,6 +112,10 @@ export class Proposal {
         this.executed = true;
     }
 
+    public endProposal(success: bool): void {
+        this.ended = true;
+        this.success = success;
+    }
     // check if investor has voted
     public checkVoter(accountId: string): bool {
         return this.voters.includes(accountId);
@@ -105,8 +125,8 @@ export class Proposal {
 export const Proposals = new PersistentUnorderedMap<string, Proposal>("PROPOSALS");
 
 /**
- * This class represents the contract parameters.
- * It contains basic properties that are needed to define the contract.
+ * @dev This class represents an investor.
+ * It contains basic properties that are needed to define an investor.
  * {@link nearBindgen} - it's a decorator that makes this class serializable so it can be persisted on the blockchain level. 
  */
 @nearBindgen
@@ -154,4 +174,5 @@ export function checkIfInvestor(accountId: string): bool {
     }
 }
 
+// min deposit of 10 NEAR
 export const MinDeposit = u128.from(1000000000000000000000000);
