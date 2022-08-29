@@ -65,7 +65,7 @@ export function contributeToDAO(): void {
 
 	assert(
 		u128.gt(context.attachedDeposit, MinDeposit) ||
-			u128.eq(context.attachedDeposit, MinDeposit),
+		u128.eq(context.attachedDeposit, MinDeposit),
 		"Amount Must be greater or equal to 1 Near"
 	);
 
@@ -102,13 +102,13 @@ export function redeemShares(amountToRedeem: u128): void {
 		"Only Investors are allowed to use this feature"
 	);
 
-    const availableFunds = u128.sub(
+	const availableFunds = u128.sub(
 		contractParameters.availableFunds,
 		contractParameters.locked
 	);
 	assert(
 		u128.gt(availableFunds, amountToRedeem) ||
-			u128.eq(availableFunds, amountToRedeem),
+		u128.eq(availableFunds, amountToRedeem),
 		"not enough available funds, please try again later"
 	);
 
@@ -116,7 +116,7 @@ export function redeemShares(amountToRedeem: u128): void {
 
 	assert(
 		u128.gt(investor.shares, amountToRedeem) ||
-			u128.eq(investor.shares, amountToRedeem),
+		u128.eq(investor.shares, amountToRedeem),
 		"not enough shares"
 	);
 
@@ -157,7 +157,7 @@ export function transferShares(amountToTransfer: u128, to: string): void {
 
 	assert(
 		u128.gt(investor.shares, amountToTransfer) ||
-			u128.eq(investor.shares, amountToTransfer),
+		u128.eq(investor.shares, amountToTransfer),
 		"not enough shares"
 	);
 
@@ -209,7 +209,7 @@ export function createProposal(proposal: Proposal): void {
 	);
 	assert(
 		u128.gt(availableFunds, proposal.amount) ||
-			u128.eq(availableFunds, proposal.amount),
+		u128.eq(availableFunds, proposal.amount),
 		"amount too big"
 	);
 
@@ -253,12 +253,11 @@ export function vote(proposalId: string): void {
 }
 
 /**
- * @dev allows the admin to end a proposal
- * @param proposalId - an identifier of a proposal to be ended
+ * @dev allows the admin to execute a Proposal
+ * @param proposalId - an identifier of a proposal to be executed
  *
  */
-
-export function endProposal(proposalId: string): void {
+export function executeProposal(proposalId: string): void {
 	const contractParameters = getContractParams();
 
 	assert(
@@ -273,48 +272,29 @@ export function endProposal(proposalId: string): void {
 		"cannot execute proposal before end date"
 	);
 
+	assert(!proposal.executed, "cannot execute proposal already executed");
 	assert(!proposal.ended, "proposal has already ended");
+
 
 	//calculate vote percentage
 	const votePercentage = u128.mul(
 		u128.div(proposal.votes, contractParameters.totalShares),
 		u128.from(100)
 	);
+
 	// the if block only runs if votePercentage has reached/exceeded the required quorum. Sets success to true
 	// else success is set to false
 	if (
 		u128.gt(votePercentage, u128.from(contractParameters.quorum)) ||
 		u128.eq(votePercentage, u128.from(contractParameters.quorum))
 	) {
-		proposal.endProposal(true);
+		proposal.executeProposal();
+		proposal.endProposal(true)
 	} else {
 		proposal.endProposal(false);
 	}
 
-
-	Proposals.set(proposalId, proposal);
-	updateContractParams(contractParameters);
-}
-
-/**
- * @dev allows the admin to execute a Proposal
- * @param proposalId - an identifier of a proposal to be executed
- *
- */
-
-export function executeProposal(proposalId: string): void {
-	const contractParameters = getContractParams();
-
-	assert(
-		contractParameters.admin == context.predecessor,
-		"Only Admin is allowed to use this feature"
-	);
-
-	let proposal = getProposal(proposalId);
-
-	assert(proposal.ended, "proposal hasn't ended");
-	assert(!proposal.executed, "cannot execute proposal already executed");
-    // funds transferred to recipient only if proposal is a success
+	// funds transferred to recipient only if proposal is a success
 	if (proposal.success) {
 		//send proposal amount to recipient
 		ContractPromiseBatch.create(proposal.recipient).transfer(
@@ -324,10 +304,9 @@ export function executeProposal(proposalId: string): void {
 		contractParameters.updateAvailableFunds(proposal.amount, "sub");
 	}
 
-	proposal.executeProposal();
-    // amount of funds locked is reduced as proposal has been executed
-    // the funds are either sent to the recipient if proposal was a success
-    // or they are made available again to the DAO
+	// amount of funds locked is reduced as proposal has been executed
+	// the funds are either sent to the recipient if proposal was a success
+	// or they are made available again to the DAO
 	contractParameters.updateLocked(proposal.amount, "sub");
 
 	Proposals.set(proposalId, proposal);

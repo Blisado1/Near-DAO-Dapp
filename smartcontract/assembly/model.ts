@@ -48,13 +48,13 @@ export class contractParameters {
         this.admin = newAdmin;
     }
 
-    public updateLocked(amount: u128, command: string) : void {
+    public updateLocked(amount: u128, command: string): void {
         if (command == "add") {
             this.locked = u128.add(this.locked, amount);
         } else if (command == "sub") {
             this.locked = u128.sub(this.locked, amount);
         }
-        
+
     }
 }
 
