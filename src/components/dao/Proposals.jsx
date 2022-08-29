@@ -14,12 +14,14 @@ import {
   voteProposal,
   getContractParams,
   executeProposal,
+  getInvestorData,
 } from "../../utils/dao";
 import { utils } from "near-api-js";
 
 export default function Proposals() {
   const [proposals, setProposals] = useState([]);
   const [admin, setAdmin] = useState("");
+  const [userData, setUserData] = useState({});
   const [loading, setLoading] = React.useState(false);
 
   const account = window.walletConnection.account();
@@ -31,7 +33,15 @@ export default function Proposals() {
   const retrieveData = useCallback(async () => {
     const contract = await getContractParams();
     setAdmin(contract.admin);
-  }, []);
+
+    if (account.accountId) {
+      const data = await getInvestorData(account.accountId);
+      if (data !== null) {
+        console.log(data);
+        setUserData(data);
+      }
+    }
+  }, [account.accountId]);
 
   function isFinished(proposal) {
     const now = new Date().getTime();
@@ -204,16 +214,24 @@ export default function Proposals() {
                   {" "}
                   {isFinished(proposal) ? (
                     "Vote finished"
-                  ) : hasVoted(account.accountId, proposal) ? (
-                    "You already voted"
+                  ) : userData ? (
+                    userData.isInvestor ? (
+                      hasVoted(account.accountId, proposal) ? (
+                        "You already voted"
+                      ) : (
+                        <LoadingButton
+                          onClick={(e) => startVoteTxn(proposal)}
+                          loading={loading}
+                          variant="contained"
+                        >
+                          Vote
+                        </LoadingButton>
+                      )
+                    ) : (
+                      "Voting In Progress"
+                    )
                   ) : (
-                    <LoadingButton
-                      onClick={(e) => startVoteTxn(proposal)}
-                      loading={loading}
-                      variant="contained"
-                    >
-                      Vote
-                    </LoadingButton>
+                    "Voting In Progress"
                   )}
                 </TableCell>
                 <TableCell align="center" sx={{ color: "#aec1c5" }}>
