@@ -17,6 +17,7 @@ export const Transfer = () => {
       await transferShares({ amountToTransfer: amount, to: sendTo }).then(
         (resp) => {
           console.log(resp);
+          window.location.reload();
         }
       );
     } catch (error) {

@@ -15,6 +15,7 @@ export const Contribute = () => {
       setLoading(true);
       await contributToDAO(inputValue).then((resp) => {
         console.log("done");
+        window.location.reload();
       });
     } catch (error) {
       console.log({ error });

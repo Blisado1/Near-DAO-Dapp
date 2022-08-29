@@ -73,6 +73,7 @@ export default function Proposals() {
       setLoading(true);
       await voteProposal(proposal.id).then((resp) => {
         console.log(resp);
+        window.location.reload();
       });
     } catch (error) {
       console.log({ error });
@@ -86,6 +87,7 @@ export default function Proposals() {
       setLoading(true);
       await executeProposal(proposal.id).then((resp) => {
         console.log(resp);
+        window.location.reload();
       });
     } catch (error) {
       console.log({ error });
@@ -218,8 +220,12 @@ export default function Proposals() {
                   {convertTime(proposal)}
                 </TableCell>
                 <TableCell sx={{ color: "#aec1c5" }} align="center">
-                  {proposal.executed ? (
-                    "Yes"
+                  {proposal.ended ? (
+                    proposal.executed ? (
+                      "Yes"
+                    ) : (
+                      "No"
+                    )
                   ) : admin === account.accountId ? (
                     <LoadingButton
                       onClick={(e) => startExecTxn(proposal)}

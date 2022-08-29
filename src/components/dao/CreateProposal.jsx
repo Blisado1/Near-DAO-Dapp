@@ -17,6 +17,7 @@ export const Proposal = () => {
       setLoading(true);
       await createProposal({ amount, name, recipient }).then((resp) => {
         console.log(resp);
+        window.location.reload();
       });
     } catch (error) {
       console.log({ error });
