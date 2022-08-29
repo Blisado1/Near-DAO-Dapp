@@ -6,7 +6,7 @@ This is a test dapp and should not be used in production.
 
 This DAO contract:
 
-- Collects investors money (cUSD) & allocate shares
+- Collects investors money (Near) & allocate shares
 - Keep track of investor contributions with shares
 - Allow investors to transfer shares
 - Allow investment proposals to be created and voted
