@@ -38,7 +38,7 @@ export const Transfer = () => {
         </Tooltip>
       </p>
       <Input
-        name={"Amount In NEAR"}
+        name={"Amount of Shares"}
         type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
